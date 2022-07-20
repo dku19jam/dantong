@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <meta charset="UTF-8">
+    <title>admin page</title>
+</head>
+<body>
+<h2>관리자 페이지(관리자 전용)</h2>
+
+ID : <span sec:authentication="name"></span> <br>
+소유 권한 : <span sec:authentication="authorities"></span> <br>
+
+<a href="/">메인 페이지로 이동 -></a>
+</body>
+</html>

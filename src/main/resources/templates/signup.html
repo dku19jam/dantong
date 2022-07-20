@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <meta charset="UTF-8">
+    <title>signup page</title>
+</head>
+<body>
+<h1>회원가입 페이지</h1>
+<form th:action="@{/user}" method="POST">
+    email : <input type="text" name="email"> <br>
+    password : <input type="password" name="password"> <br>
+    student Id : <input type="text" name="studentId"> <br>
+    major : <input type="text" name="major"> <br>
+    <input type="radio" name="auth" value="ROLE_ADMIN,ROLE_USER"> admin
+    <input type="radio" name="auth" value="ROLE_USER" checked="checked"> user <br>
+    <button type="submit">회원가입 하기</button>
+</form> <br>
+
+<a href="/login">로그인 하기 -></a>
+</body>
+</html>
