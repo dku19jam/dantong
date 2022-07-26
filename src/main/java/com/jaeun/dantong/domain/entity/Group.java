@@ -25,8 +25,6 @@ public class Group {
     @Column(name = "group_id")
     private Long id;
 
-    @OneToOne
-    private GroupMember leader;
     private String groupName;
 
 
@@ -37,7 +35,6 @@ public class Group {
     public Group(String groupName, GroupMember groupMember) {
         this.groupName = groupName;
         this.groupMembers.add(groupMember);
-        this.leader = groupMember;
     }
 
     public void addMember(GroupMember groupMember) {

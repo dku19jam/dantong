@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private String major;
 
     @Column(nullable = false)
-    private int studentId;
+    private Integer studentId;
 
     @Builder
     public User(String email, String password, String auth,String major, int studentId ) {

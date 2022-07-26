@@ -39,6 +39,8 @@ public class GroupMember{
 
     private Long point;
 
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
 
     @Builder
     public GroupMember(User user, Group group) {
