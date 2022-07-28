@@ -32,9 +32,8 @@ public class Group {
     private final Set<GroupMember> groupMembers = new HashSet<>();
 
     @Builder
-    public Group(String groupName, GroupMember groupMember) {
+    public Group(String groupName) {
         this.groupName = groupName;
-        this.groupMembers.add(groupMember);
     }
 
     public void addMember(GroupMember groupMember) {

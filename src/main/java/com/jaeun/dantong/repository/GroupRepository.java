@@ -9,4 +9,5 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<Group,Long> {
     List<Group> findAllByGroupName(User user);
 
+    Group findByGroupName(String name);
 }

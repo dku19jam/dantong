@@ -42,9 +42,23 @@ public class GroupMember{
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
-    @Builder
-    public GroupMember(User user, Group group) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public void setMemberRole(MemberRole memberRole) {
+        this.memberRole = memberRole;
+    }
+
+    public static GroupMember createGroupMember(User user,Group group) {
+        GroupMember groupMember = new GroupMember();
+        groupMember.setUser(user);
+        groupMember.setGroup(group);
+
+        return groupMember;
     }
 }
