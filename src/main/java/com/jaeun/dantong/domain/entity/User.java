@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +26,11 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Column
+    private String name;
 
     @Column(nullable = false)
-    private String auth;
+    private String password;
 
     @Column(nullable = false)
     private String major;
@@ -38,47 +38,24 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Integer studentId;
 
-    @Builder
-    public User(String email, String password, String auth,String major, int studentId ) {
+    @Column(length = 10)
+    private String status;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    @Builder
+    public User(String email,String name, String password, String major, int studentId ) {
+        this.status = "INACTIVE";
         this.email = email;
+        this.name = name;
         this.password = password;
-        this.auth = auth;
+        this.userRole = UserRole.USER;
         this.major = major;
         this.studentId = studentId;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> roles = new HashSet<>();
-        for (String role : auth.split(",")){
-            roles.add(new SimpleGrantedAuthority(role));
-        }
-        return roles;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

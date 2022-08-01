@@ -12,10 +12,9 @@
 <form th:action="@{/user}" method="POST">
     email : <input type="text" name="email"> <br>
     password : <input type="password" name="password"> <br>
+    name : <input type="text" name="name"> <br>
     student Id : <input type="text" name="studentId"> <br>
     major : <input type="text" name="major"> <br>
-    <input type="radio" name="auth" value="ROLE_ADMIN,ROLE_USER"> admin
-    <input type="radio" name="auth" value="ROLE_USER" checked="checked"> user <br>
     <button type="submit">회원가입 하기</button>
 </form> <br>
 
