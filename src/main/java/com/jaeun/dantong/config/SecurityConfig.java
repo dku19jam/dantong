@@ -1,13 +1,12 @@
 package com.jaeun.dantong.config;
 
 import com.jaeun.dantong.config.auth.JwtAuthenticationFilter;
-import com.jaeun.dantong.config.auth.JwtAuthorizationFilter;
 import com.jaeun.dantong.config.auth.JwtProvider;
 import com.jaeun.dantong.error.CustomAuthenticationEntryPoint;
 import com.jaeun.dantong.error.WebAccessDeniedHandler;
 import com.jaeun.dantong.repository.UserRepository;
 import com.jaeun.dantong.service.UserDetailService;
-import com.jaeun.dantong.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

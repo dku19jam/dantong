@@ -6,8 +6,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.lang.reflect.Member;
-
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserResponse {

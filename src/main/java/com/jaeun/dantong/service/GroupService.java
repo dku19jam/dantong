@@ -1,6 +1,6 @@
 package com.jaeun.dantong.service;
 
-import com.jaeun.dantong.domain.dto.UserDto;
+
 import com.jaeun.dantong.domain.dto.request.AcceptGroupRequest;
 import com.jaeun.dantong.domain.dto.request.CreateGroupRequest;
 import com.jaeun.dantong.domain.dto.request.JoinGroupRequest;
@@ -13,12 +13,11 @@ import com.jaeun.dantong.repository.GroupMemberRepository;
 import com.jaeun.dantong.repository.GroupRepository;
 import com.jaeun.dantong.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 
 @Service
