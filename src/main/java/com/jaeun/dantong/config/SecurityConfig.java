@@ -2,6 +2,9 @@ package com.jaeun.dantong.config;
 
 import com.jaeun.dantong.config.auth.JwtAuthenticationFilter;
 import com.jaeun.dantong.config.auth.JwtAuthorizationFilter;
+import com.jaeun.dantong.config.auth.JwtProvider;
+import com.jaeun.dantong.error.CustomAuthenticationEntryPoint;
+import com.jaeun.dantong.error.WebAccessDeniedHandler;
 import com.jaeun.dantong.repository.UserRepository;
 import com.jaeun.dantong.service.UserDetailService;
 import com.jaeun.dantong.service.UserService;
@@ -16,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @RequiredArgsConstructor
@@ -23,11 +27,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
-
     private final UserDetailService userDetailService;
 
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
@@ -37,20 +40,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/login", "/signup", "/user").permitAll()
-                        .antMatchers("/").hasRole("USER")
-                        .antMatchers("/admin").hasRole("ADMIN")
+                        .antMatchers("/login", "/signup","/","/users/**","/users/login","/users/confirm").permitAll()
                         .anyRequest().authenticated()
                 .and()
-                    .formLogin().disable()
-                    .httpBasic().disable()
-                        .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                        .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
-                        .authorizeRequests()
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .accessDeniedHandler(new WebAccessDeniedHandler())
                 .and()
-                    .logout()
-                        .logoutSuccessUrl("/login")
-                        .invalidateHttpSession(true);
+                        .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

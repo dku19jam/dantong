@@ -1,16 +1,22 @@
 package com.jaeun.dantong.service;
 
+import com.jaeun.dantong.config.auth.JwtProvider;
 import com.jaeun.dantong.domain.dto.UserDto;
+import com.jaeun.dantong.domain.dto.request.LoginRequest;
+import com.jaeun.dantong.domain.dto.response.LoginResponse;
+import com.jaeun.dantong.domain.dto.response.TokenResponse;
 import com.jaeun.dantong.domain.dto.response.UserResponse;
+import com.jaeun.dantong.domain.entity.RefreshToken;
 import com.jaeun.dantong.domain.entity.User;
 import com.jaeun.dantong.email.EmailSender;
+import com.jaeun.dantong.repository.RefreshTokenRepository;
 import com.jaeun.dantong.repository.UserRepository;
 import com.jaeun.dantong.token.ConfirmationToken;
 import com.jaeun.dantong.token.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,20 +26,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
+    private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenService confirmationTokenService;
-
+    private final JwtProvider jwtProvider;
     private final EmailSender emailSender;
-
     private final UserRepository userRepository;
-
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public String singup(UserDto userDto) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        userDto.setPassword(encoder.encode(userDto.getPassword()));
 
         String token = signUpUser(User.builder()
                 .email(userDto.getEmail())
@@ -67,6 +72,8 @@ public class UserService {
                 user
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
+        log.info(String.valueOf(confirmationToken.getUser()));
+
         return token;
     }
 
@@ -90,5 +97,32 @@ public class UserService {
         confirmationTokenService.setConfirmedAt(token);
         userRepository.enableMember(confirmationToken.getUser().getEmail());
         return new UserResponse(confirmationToken.getUser());
+    }
+
+    public LoginResponse login(LoginRequest loginRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        TokenResponse createToken = createTokenReturn(loginRequest);
+        Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
+        return new LoginResponse(
+                createToken.getAccessToken(),
+                createToken.getRefreshId(),
+                tokenExpireTime);
+    }
+
+    private TokenResponse createTokenReturn(LoginRequest loginRequest) {
+
+        String accessToken = jwtProvider.createAccessToken(loginRequest.getEmail());
+        String refreshToken = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshToken");
+        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshTokenExpirationAt");
+
+        RefreshToken insertRefreshToken = new RefreshToken(
+                loginRequest.getEmail(),
+                accessToken,
+                refreshToken,
+                refreshTokenExpirationAt
+        );
+        refreshTokenRepository.save(insertRefreshToken);
+        log.info(String.valueOf(insertRefreshToken));
+        return new TokenResponse(accessToken, insertRefreshToken.getId());
     }
 }
