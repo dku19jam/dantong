@@ -1,6 +1,7 @@
 package com.jaeun.dantong.config.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jaeun.dantong.config.auth.secret.SecretKey;
 import com.jaeun.dantong.service.UserDetailService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class JwtProvider {
     public String createAccessToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
-        Date validityTime = new Date(now.getTime() + secretKey.jwtValidityTime);
+        Date validityTime = new Date(now.getTime() + secretKey.getJwtValidityTime());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validityTime)
-                .signWith(SignatureAlgorithm.HS256, secretKey.jwtSecretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getJwtSecretKey())
                 .compact();
     }
 

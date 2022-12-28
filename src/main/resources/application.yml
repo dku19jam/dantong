@@ -13,7 +13,23 @@ spring:
         #        show_sql: true
         format_sql: true
 
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ${mail-host}
+    password: ${mail-password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+
 logging:
   level:
     org.hibernate.sql: debug
 #     org.hibernate.type: trace
+security:
+  jwt:
+    token:
+      secret-key: ${JWT-KEY}
+      expire-length: 36000000
+      expire-length-refresh: 5184000000
