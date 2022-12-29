@@ -100,7 +100,8 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         TokenResponse createToken = createTokenReturn(loginRequest);
         Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
         return new LoginResponse(
@@ -113,7 +114,9 @@ public class UserService {
 
         String accessToken = jwtProvider.createAccessToken(loginRequest.getEmail());
         String refreshToken = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshToken");
-        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshTokenExpirationAt");
+        String refreshTokenExpirationAt = jwtProvider
+                .createRefreshToken(loginRequest.getEmail())
+                .get("refreshTokenExpirationAt");
 
         RefreshToken insertRefreshToken = new RefreshToken(
                 loginRequest.getEmail(),
